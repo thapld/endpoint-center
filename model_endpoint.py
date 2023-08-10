@@ -63,8 +63,8 @@ class ModelMiner():
         
         self.system_prompt=""
 
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=False )
-        self.model = AutoModelForCausalLM.from_pretrained( model_name, torch_dtype = torch.float16, low_cpu_mem_usage=True )
+        self.tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neox-20b")
+        self.model = AutoModelForCausalLM.from_pretrained( model_name, torch_dtype = torch.float16, low_cpu_mem_usage=True,trust_remote_code=True)
         print("model loaded")
         
         
