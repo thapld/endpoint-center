@@ -72,7 +72,7 @@ class ModelMiner():
             self.model = self.model.to( self.device )
 
     def _process_history(self, history: List[str]) -> str:
-        processed_history = ''
+        processed_history = '<|im_start|>system\nA conversation between a user and an LLM-based AI assistant. The assistant gives helpful and honest answers.<|im_end|>'
 
         if self.system_prompt:
             processed_history += self.system_prompt
@@ -82,15 +82,15 @@ class ModelMiner():
                 processed_history += '' + message['content'].strip() + ' '
 
             if message['role'] == 'assistant':
-                processed_history += 'ASSISTANT:' + message['content'].strip() + '</s>'
+                processed_history += '\n<|im_start|>assistant' + message['content'].strip() + '<|im_end|>'
             if message['role'] == 'user':
-                processed_history += 'USER: ' + message['content'].strip() + ' '
+                processed_history += '\n<|im_start|>user\n' + message['content'].strip() + '<|im_end|>'
         return processed_history
 
     def forward(self, messages, num_replies=4):
 
         history = self._process_history(messages)
-        prompt = history + "ASSISTANT:"
+        prompt = history + "\n<|im_start|>assistant"
 
         input_ids = self.tokenizer.encode(prompt, return_tensors="pt").to(self.device)
 
